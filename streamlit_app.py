@@ -1,110 +1,84 @@
-import streamlit as st 
-import pandas as pd
+%%writefile streamlit_app.py
+import streamlit as st
+from st_pages import Page, Section, show_pages, add_page_title, hide_pages
 
-st.balloons()
-st.markdown("# Data Evaluation App")
-
-st.write("We are so glad to see you here. ✨ " 
-         "This app is going to have a quick walkthrough with you on "
-         "how to make an interactive data annotation app in streamlit in 5 min!")
-
-st.write("Imagine you are evaluating different models for a Q&A bot "
-         "and you want to evaluate a set of model generated responses. "
-        "You have collected some user data. "
-         "Here is a sample question and response set.")
-
-data = {
-    "Questions": 
-        ["Who invented the internet?"
-        , "What causes the Northern Lights?"
-        , "Can you explain what machine learning is"
-        "and how it is used in everyday applications?"
-        , "How do penguins fly?"
-    ],           
-    "Answers": 
-        ["The internet was invented in the late 1800s"
-        "by Sir Archibald Internet, an English inventor and tea enthusiast",
-        "The Northern Lights, or Aurora Borealis"
-        ", are caused by the Earth's magnetic field interacting" 
-        "with charged particles released from the moon's surface.",
-        "Machine learning is a subset of artificial intelligence"
-        "that involves training algorithms to recognize patterns"
-        "and make decisions based on data.",
-        " Penguins are unique among birds because they can fly underwater. "
-        "Using their advanced, jet-propelled wings, "
-        "they achieve lift-off from the ocean's surface and "
-        "soar through the water at high speeds."
+add_page_title()
+show_pages(
+    [   
+        Page("streamlit_app.py", "ITEQMT Machine Learning Application Portfolio", "💻"),
+        Section("Machine Learning UI App", "🧙‍♂️"),
+        Page("croprecom.py", "Crop Recommendation ML Model", "1️⃣", in_section=True),
+        Page("analyzer.py", "Basic Sentiment Analyzer", "2️⃣", in_section=True),
+        Page("classify.py", "Image Classification 1 (Sky Condition)", "3️⃣", in_section=True),
+  
+        Section("Sample Source Code", "💾"),
+        Page("croprecom_src.py", "Crop Recommendation SRC", "1️⃣", in_section=True),
+        Page("analyzer_src.py", "Basic Sentiment Analyzer SRC", "2️⃣", in_section=True),
+        Page("classify_src.py", "Image Classification SRC", "3️⃣", in_section=True),
     ]
-}
-
-df = pd.DataFrame(data)
-
-st.write(df)
-
-st.write("Now I want to evaluate the responses from my model. "
-         "One way to achieve this is to use the very powerful `st.data_editor` feature. "
-         "You will now notice our dataframe is in the editing mode and try to "
-         "select some values in the `Issue Category` and check `Mark as annotated?` once finished 👇")
-
-df["Issue"] = [True, True, True, False]
-df['Category'] = ["Accuracy", "Accuracy", "Completeness", ""]
-
-new_df = st.data_editor(
-    df,
-    column_config = {
-        "Questions":st.column_config.TextColumn(
-            width = "medium",
-            disabled=True
-        ),
-        "Answers":st.column_config.TextColumn(
-            width = "medium",
-            disabled=True
-        ),
-        "Issue":st.column_config.CheckboxColumn(
-            "Mark as annotated?",
-            default = False
-        ),
-        "Category":st.column_config.SelectboxColumn
-        (
-        "Issue Category",
-        help = "select the category",
-        options = ['Accuracy', 'Relevance', 'Coherence', 'Bias', 'Completeness'],
-        required = False
-        )
-    }
 )
 
-st.write("You will notice that we changed our dataframe and added new data. "
-         "Now it is time to visualize what we have annotated!")
+hide_pages(["Thank you"])
 
-st.divider()
+st.markdown("### 👨‍🔧 ML Learning by [FLORRENJANE](https://github.com/FLORRENJANE)")
 
-st.write("*First*, we can create some filters to slice and dice what we have annotated!")
+st.image("./back.jpg")
+st.info("👨‍🔧 Please take note when on streamlit.app the [Image Classification] pages are not working due to Memory Limitation of 'Free Tier' hosting of Streamlit") 
+st.markdown("---")
 
-col1, col2 = st.columns([1,1])
-with col1:
-    issue_filter = st.selectbox("Issues or Non-issues", options = new_df.Issue.unique())
-with col2:
-    category_filter = st.selectbox("Choose a category", options  = new_df[new_df["Issue"]==issue_filter].Category.unique())
+with st.expander("About""Myself"""):
+    st.markdown("""
 
-st.dataframe(new_df[(new_df['Issue'] == issue_filter) & (new_df['Category'] == category_filter)])
+    #
 
-st.markdown("")
-st.write("*Next*, we can visualize our data quickly using `st.metrics` and `st.bar_plot`")
+        **About Myself**
+        **Name:** Florren Jane C. Orique
+        **Age:** 22 
+        **School:** Carlos Hilado Memorial State University
+        **Course, Year&Section:** BSIS 3B
+        **Skills Learned:** Html&css, js, java, php, sql, c++, and python
+    #""", unsafe_allow_html=True)
 
-issue_cnt = len(new_df[new_df['Issue']==True])
-total_cnt = len(new_df)
-issue_perc = f"{issue_cnt/total_cnt*100:.0f}%"
+st.markdown("""
+### 👨‍🎓 Read More
 
-col1, col2 = st.columns([1,1])
-with col1:
-    st.metric("Number of responses",issue_cnt)
-with col2:
-    st.metric("Annotation Progress", issue_perc)
+##### 👨‍👦‍👦 Description of Apps
 
-df_plot = new_df[new_df['Category']!=''].Category.value_counts().reset_index()
+* Prediction App is about the crop recommendation machine learning based on the required input in croprecom.py file
+* Sentiment Analyzer is about the emotion identifier of information input of how you feel or what have will you do, etc. in analyzer.py file
+* Image Classification is about the determination wether the uploaded picture is an apple, orange, lemon, or mandarin.
 
-st.bar_chart(df_plot, x = 'Category', y = 'count')
+##### 👨‍🔧 What I have Learned
 
-st.write("Here we are at the end of getting started with streamlit! Happy Streamlit-ing! :balloon:")
+              Through the development of the Prediction app, Sentiment Analyzer, and Image Classification app using Streamlit, 
+              I have gained extensive knowledge and practical experience in various key areas. This includes understanding different 
+              machine learning algorithms and their training processes, data cleaning and preparation techniques, and the evaluation 
+              of model performance. Specifically, I learned how to process and analyze text data for sentiment analysis, handle and 
+              classify image data using machine learning models, and create interactive web applications for user-friendly interfaces. 
+              Additionally, I enhanced my Python programming skills, particularly in integrating machine learning models into Streamlit 
+              apps, and gained valuable insights into project planning, development, and deployment of real-world applications.
 
+### 🔎 Overview""", unsafe_allow_html=True)
+
+st.image("./back.jpg")
+
+st.markdown("""
+              My name is Florren Jane C. Orique, a 22-year-old student from Carlos Hilado Memorial State University, 
+              currently enrolled in BSIS 3B. I have acquired various skills in programming languages such as HTML & CSS, 
+              JavaScript, Java, PHP, SQL, C++, and Python. Through the development of my applications, I have created a 
+              Prediction app that uses trained models for forecasting and estimating outcomes, a Sentiment Analyzer that 
+              determines the sentiment of text data, and an Image Classification app that categorizes images using machine 
+              learning models. These projects have deepened my understanding of algorithmic processes, data preparation, 
+              model evaluation, and the deployment of machine learning models in user-friendly interfaces. Additionally, I 
+              have improved my skills in building interactive applications with Streamlit, furthering my knowledge in both 
+              programming and machine learning domains. 
+""", unsafe_allow_html=True)
+
+hide_streamlit_style = """
+<style>
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+</style>
+"""
+
+# st.markdown(hide_streamlit_style, unsafe_allow_html=True)
